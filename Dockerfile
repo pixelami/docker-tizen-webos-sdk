@@ -1,4 +1,4 @@
-FROM ubuntu:18.04
+FROM ubuntu:22.04
 
 # Install prerequisites
 RUN apt-get update && apt-get install -y \
@@ -8,7 +8,7 @@ RUN apt-get update && apt-get install -y \
   unzip \
   pciutils \
   locales \
-  libssl1.0.0 \
+  libssl3 \
   # helper packages
   curl \
   net-tools \
@@ -36,7 +36,7 @@ WORKDIR ${HOME}
 # Tizen Studio must be installed in user home dir.
 # See: https://stackoverflow.com/questions/47269478/error-installing-tizen-studio-on-windows-10
 # See also: https://forum.developer.samsung.com/t/double-click-on-installer-tizen-studio-4-1-doesnt-launch-the-app-on-big-sure-11-3-1/13352/8
-ARG TIZEN_STUDIO_VERSION=4.1.1
+ARG TIZEN_STUDIO_VERSION=5.5
 ARG TIZEN_STUDIO_FILE=web-cli_Tizen_Studio_${TIZEN_STUDIO_VERSION}_ubuntu-64.bin
 ARG TIZEN_STUDIO_URL=http://download.tizen.org/sdk/Installer/tizen-studio_${TIZEN_STUDIO_VERSION}/${TIZEN_STUDIO_FILE}
 RUN wget ${TIZEN_STUDIO_URL} \
@@ -58,11 +58,12 @@ RUN mv ${HOME}/tizen-studio /tizen-studio \
   && ln -s /tizen-studio ${HOME}/tizen-studio
 
 # Copy and extract webOS CLI
-ARG WEBOS_SDK_PATH=/webOS_TV_SDK
-COPY vendor/webos_cli_tv.zip .
-RUN unzip -q webos_cli_tv.zip -d ${WEBOS_SDK_PATH} \
-  && chmod -R +x ${WEBOS_SDK_PATH}/CLI/bin \
-  && rm webos_cli_tv.zip
+#ARG WEBOS_SDK_PATH=/webOS_TV_SDK
+#COPY vendor/webos_cli_tv.zip .
+#RUN unzip -q webos_cli_tv.zip -d ${WEBOS_SDK_PATH} \
+#  && chmod -R +x ${WEBOS_SDK_PATH}/CLI/bin \
+#  && rm webos_cli_tv.zip
 
 # Add tizen/webos cli to PATH
-ENV PATH $PATH:/tizen-studio/tools/:/tizen-studio/tools/ide/bin/:/tizen-studio/package-manager/:${WEBOS_SDK_PATH}/CLI/bin
+ENV PATH $PATH:/tizen-studio/tools/:/tizen-studio/tools/ide/bin/:/tizen-studio/package-manager/
+#ENV PATH $PATH:/tizen-studio/tools/:/tizen-studio/tools/ide/bin/:/tizen-studio/package-manager/:${WEBOS_SDK_PATH}/CLI/bin
